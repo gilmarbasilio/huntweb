@@ -35,8 +35,6 @@ export default function Main() {
   }
 
   function nextPage() {
-    const { page, productInfo } = this.state;
-
     if (page === productInfo.pages) return;
 
     const pageNumber = page + 1;
