@@ -1,37 +1,38 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
+
 import api from "../../services/api";
+
 import "./styles.css";
-export default class Product extends Component {
-  state = {
-    product: {}
-  };
 
-  async componentDidMount() {
-    const { id } = this.props.match.params;
-    const response = await api.get(`/products/${id}`);
+export default function Product(props) {
+  const [product, setProduct] = useState({});
 
-    this.setState({
-      product: response.data
-    });
-  }
+  useEffect(() => {
+    async function fetchData() {
+      const { id } = props.match.params;
 
-  render() {
-    const { product } = this.state;
+      const response = await api.get(`/products/${id}`);
 
-    return (
-      <div className="product">
-        <div className="product-info">
-          <h1>{product.title}</h1>
-          <p>{product.description}</p>
+      if (response) {
+        setProduct(response.data);
+      }
+    }
+    fetchData();
+  }, [props]);
 
-          <p>
-            URL: <a href={product.url}>{product.url}</a>
-          </p>
-        </div>
-        <div className="actions">
-          <button onClick={() => this.props.history.goBack()}>Voltar</button>
-        </div>
+  return (
+    <div className="product">
+      <div className="product-info">
+        <h1>{product.title}</h1>
+        <p>{product.description}</p>
+
+        <p>
+          URL: <a href={product.url}>{product.url}</a>
+        </p>
       </div>
-    );
-  }
+      <div className="actions">
+        <button onClick={() => props.history.goBack()}>Voltar</button>
+      </div>
+    </div>
+  );
 }
